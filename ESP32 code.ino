@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <ThingSpeak.h>
 
-const char* ssid = "your_Hotspot_name";
+const char* ssid = "yourSSID";
 const char* password = "yourPASSWORD";
 
 unsigned long channelID = 2699677;
@@ -23,9 +23,13 @@ void loop() {
   // Dummy values for now
   float temp = 25.0;
   float hum = 60.0;
+  int people = 3;
+  int fanStatus = 1; // 1 = ON, 0 = OFF
 
-  ThingSpeak.setField(1, temp); // temperature
-  ThingSpeak.setField(2, hum);  // humidity
+  ThingSpeak.setField(1, temp);       // temperature
+  ThingSpeak.setField(2, hum);        // humidity
+  ThingSpeak.setField(3, people);     // people count
+  ThingSpeak.setField(4, fanStatus);  // fan status
 
   ThingSpeak.writeFields(channelID, writeAPIKey);
 
