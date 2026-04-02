@@ -1,11 +1,11 @@
 #include <WiFi.h>
 #include <ThingSpeak.h>
 
-const char* ssid = "yourSSID";
+const char* ssid = "your_Hotspot_name";
 const char* password = "yourPASSWORD";
 
-unsigned long channelID = YOUR_CHANNEL_NUMBER;
-const char* writeAPIKey = "YOUR_API_KEY";
+unsigned long channelID = 2699677;
+const char* writeAPIKey = "0JNA7MB8ISFV44NM";
 
 WiFiClient client;
 
