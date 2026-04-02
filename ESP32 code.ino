@@ -20,7 +20,14 @@ void setup() {
 }
 
 void loop() {
-  ThingSpeak.setField(1, 25); // dummy temperature
+  // Dummy values for now
+  float temp = 25.0;
+  float hum = 60.0;
+
+  ThingSpeak.setField(1, temp); // temperature
+  ThingSpeak.setField(2, hum);  // humidity
+
   ThingSpeak.writeFields(channelID, writeAPIKey);
+
   delay(15000); // ThingSpeak minimum delay
 }
