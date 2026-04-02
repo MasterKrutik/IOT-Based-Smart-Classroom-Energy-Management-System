@@ -3,119 +3,114 @@
 #include <Adafruit_SSD1306.h>
 #include <DHT.h>
 
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-#define OLED_RESET -1    // Reset pin # (or -1 if sharing Arduino reset pin)
+// === Display Settings ===
+#define OLED_WIDTH 128
+#define OLED_HEIGHT 64
+#define OLED_RESET_PIN -1
 
-#define DHTPIN 2         // DHT sensor pin
-#define DHTTYPE DHT11    // DHT 11
+// === Sensor & Actuator Pins ===
+#define DHT_SENSOR_PIN 2
+#define DHT_SENSOR_TYPE DHT11
+#define ENTRY_PIN 9
+#define EXIT_PIN 8
+#define FAN_LED_PIN 3
+#define ROOM_LED_PIN 4
 
-#define IR_SENSOR_ENTRY_PIN 9
-#define IR_SENSOR_EXIT_PIN 8
-#define RED_LED_PIN 3
-#define GREEN_LED_PIN 4
+// === Thresholds ===
+#define TEMP_LIMIT 30.0
+#define HUM_LIMIT 70.0
 
-#define TEMP_THRESHOLD 30.0   // Temperature threshold in °C
-#define HUM_THRESHOLD 70.0    // Humidity threshold in %
+Adafruit_SSD1306 screen(OLED_WIDTH, OLED_HEIGHT, &Wire, OLED_RESET_PIN);
+DHT climate(DHT_SENSOR_PIN, DHT_SENSOR_TYPE);
 
-Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-DHT dht(DHTPIN, DHTTYPE);
-
-int peopleCount = 0;
-int peopleEntered = 0;
-int peopleExited = 0;
-float temperature;
-float humidity;
-bool dhtActive = false;
-bool fanStatus = false;
-bool greenLedStatus = false;
+// === State Variables ===
+int currentOccupancy = 0;
+int totalEntered = 0;
+int totalExited = 0;
+float tempReading = 0;
+float humReading = 0;
+bool climateActive = false;
+bool fanOn = false;
+bool roomLightOn = false;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(IR_SENSOR_ENTRY_PIN, INPUT);
-  pinMode(IR_SENSOR_EXIT_PIN, INPUT);
-  pinMode(RED_LED_PIN, OUTPUT);
-  pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(ENTRY_PIN, INPUT);
+  pinMode(EXIT_PIN, INPUT);
+  pinMode(FAN_LED_PIN, OUTPUT);
+  pinMode(ROOM_LED_PIN, OUTPUT);
 
-  dht.begin();
-  oled.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  oled.clearDisplay();
+  climate.begin();
+  screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  screen.clearDisplay();
 }
 
 void loop() {
-  if (digitalRead(IR_SENSOR_ENTRY_PIN) == LOW) {
-    peopleEntered++;
-    peopleCount++;
-    dhtActive = true;
-    greenLedStatus = true;
-    digitalWrite(GREEN_LED_PIN, HIGH); // Turn on green LED when someone enters
-    delay(500); // Debounce
+  // Entry detection
+  if (digitalRead(ENTRY_PIN) == LOW) {
+    totalEntered++;
+    currentOccupancy++;
+    climateActive = true;
+    roomLightOn = true;
+    digitalWrite(ROOM_LED_PIN, HIGH);
+    delay(300); // shorter debounce
   }
 
-  if (digitalRead(IR_SENSOR_EXIT_PIN) == LOW) {
-    peopleExited++;
-    peopleCount = max(peopleCount - 1, 0); // Prevent negative count
-    if (peopleCount == 0) {
-      dhtActive = false;
-      greenLedStatus = false;
-      digitalWrite(GREEN_LED_PIN, LOW); // Turn off green LED when no one is present
+  // Exit detection
+  if (digitalRead(EXIT_PIN) == LOW) {
+    totalExited++;
+    currentOccupancy = max(currentOccupancy - 1, 0);
+    if (currentOccupancy == 0) {
+      climateActive = false;
+      roomLightOn = false;
+      digitalWrite(ROOM_LED_PIN, LOW);
     }
-    delay(500); // Debounce
+    delay(300);
   }
-  
-  if (dhtActive) {
-    temperature = dht.readTemperature();
-    humidity = dht.readHumidity();
-    if (peopleCount > 0 && (temperature > TEMP_THRESHOLD || humidity > HUM_THRESHOLD)) {
-      digitalWrite(RED_LED_PIN, HIGH); // Turn on red LED based on temp and humidity
-      fanStatus = true;
+
+  // Climate control
+  if (climateActive) {
+    tempReading = climate.readTemperature();
+    humReading = climate.readHumidity();
+    if (currentOccupancy > 0 && (tempReading > TEMP_LIMIT || humReading > HUM_LIMIT)) {
+      digitalWrite(FAN_LED_PIN, HIGH);
+      fanOn = true;
     } else {
-      digitalWrite(RED_LED_PIN, LOW); // Turn off red LED
-      fanStatus = false;
+      digitalWrite(FAN_LED_PIN, LOW);
+      fanOn = false;
     }
   } else {
-    temperature = humidity = 0;
-    digitalWrite(RED_LED_PIN, LOW); // Turn off red LED
-    fanStatus = false;
+    tempReading = humReading = 0;
+    digitalWrite(FAN_LED_PIN, LOW);
+    fanOn = false;
   }
 
-  oled.clearDisplay();
-  oled.setTextSize(1);
-  oled.setTextColor(SSD1306_WHITE);
-  oled.setCursor(0, 0);
-  oled.print("People Present: ");
-  oled.println(peopleCount);
-  oled.print("Temp: ");
-  oled.print(temperature);
-  oled.println(" C");
-  oled.setCursor(0, 20);
-  oled.print("Humidity: ");
-  oled.print(humidity);
-  oled.println(" %");
-  oled.setCursor(0, 30);
-  oled.print("Entered: ");
-  oled.println(peopleEntered);
-  oled.setCursor(0, 40);
-  oled.print("Exited: ");
-  oled.println(peopleExited);
-  oled.setCursor(0, 50);
-  oled.print("Fan Status: ");
-  oled.println(fanStatus ? "ON" : "OFF");
-  oled.setCursor(0, 60);
-  oled.print("Light Status: ");
-  oled.println(greenLedStatus ? "ON" : "OFF");
-  oled.display();
+  // Display info
+  screen.clearDisplay();
+  screen.setTextSize(1);
+  screen.setTextColor(SSD1306_WHITE);
+  screen.setCursor(0, 0);
+  screen.printf("Occupancy: %d\n", currentOccupancy);
+  screen.printf("Temp: %.1f C\n", tempReading);
+  screen.setCursor(0, 20);
+  screen.printf("Humidity: %.1f %%\n", humReading);
+  screen.setCursor(0, 30);
+  screen.printf("Entered: %d\n", totalEntered);
+  screen.setCursor(0, 40);
+  screen.printf("Exited: %d\n", totalExited);
+  screen.setCursor(0, 50);
+  screen.printf("Fan: %s\n", fanOn ? "ON" : "OFF");
+  screen.setCursor(0, 60);
+  screen.printf("Light: %s\n", roomLightOn ? "ON" : "OFF");
+  screen.display();
 
-  // Send data to ESP32
-  Serial.print(temperature);
-  Serial.print(",");
-  Serial.print(humidity);
-  Serial.print(",");
-  Serial.print(peopleCount);
-  Serial.print(",");
-  Serial.print(fanStatus ? 1 : 0); // Send fan status as 1 (ON) or 0 (OFF)
-  Serial.print(",");
-  Serial.println(greenLedStatus ? 1 : 0); // Send green LED status as 1 (ON) or 0 (OFF)
+  // Serial output
+  Serial.printf("%.1f,%.1f,%d,%d,%d\n",
+                tempReading,
+                humReading,
+                currentOccupancy,
+                fanOn ? 1 : 0,
+                roomLightOn ? 1 : 0);
 
-  delay(2000); // Update every 2 seconds
+  delay(2000);
 }
