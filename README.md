@@ -4,9 +4,6 @@
 
 Energy efficiency and automation are becoming essential in modern educational environments. Classrooms often waste electricity when lights and fans remain ON even when no one is present or when environmental conditions do not require them. This project introduces a smart classroom monitoring system built using Arduino Uno, PIR sensors, DHT11, OLED display, and LEDs. The system automatically controls lights based on human presence and simulates fan control based on temperature and humidity thresholds. Real‑time data is displayed on an OLED screen, while an ESP32 module enables remote monitoring and potential cloud integration. The project demonstrates how low‑cost hardware can be combined to create intelligent, responsive, and sustainable infrastructure.
 
-# Objective 
-
-This project presents a smart classroom automation system designed to optimize energy usage and enhance environmental awareness using low-cost sensors and microcontroller technology. The system utilizes PIR sensors to detect human presence, automatically controlling classroom lighting via a green LED. A DHT11 sensor monitors temperature and humidity levels, triggering a red LED to simulate fan activation when environmental thresholds are exceeded. Real-time data—including occupancy count, temperature, humidity, and system status—is displayed on an OLED screen for easy monitoring. Additionally, sensor data is transmitted to an ESP32 module for potential cloud integration and remote access. This setup promotes energy efficiency, responsive automation, and scalable smart infrastructure for educational environments.
 
 # Problem Statement
 
@@ -20,7 +17,16 @@ Traditional classrooms rely on manual switching of lights and fans, which often 
 This project addresses these issues by automating control systems using sensors and microcontrollers, ensuring that energy is used only when needed.
 
 
-# Methodology
+# Features
+- Automatic light control using PIR sensors (entry/exit detection).
+- Fan simulation based on temperature and humidity thresholds.
+- Real-time monitoring on OLED display.
+- Occupancy count tracking.
+- Remote monitoring via ESP32 (cloud-ready).
+- Low-cost, scalable, and sustainable design.
+
+
+# Hardware Components and Their Functions 
 
 ## 1. PIR Sensors (Entry & Exit)
    
