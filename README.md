@@ -94,4 +94,20 @@ This project addresses these issues by automating control systems using sensors 
     
    - Used for prototyping and connecting all components without soldering.
 
+# Cloud Integration (ThingSpeak)
+This project uses ThingSpeak, an IoT analytics platform, to enable cloud-based monitoring and data logging.
+🔹 How It Works
+
+   - The Arduino Uno sends sensor data (temperature, humidity, occupancy, fan/light status) to the ESP32 via serial communication.
+   - The ESP32 uploads this data to ThingSpeak using Wi-Fi.
+   - ThingSpeak stores the data in channels and provides real-time visualization through graphs and dashboards.
+   - Users can remotely monitor classroom conditions and energy usage trends from anywhere.
+  
+🔹 Benefits
+   - Remote access to classroom environment data.
+   - Real-time visualization of occupancy, temperature, and humidity.
+   - Historical data logging for analysis and optimization.
+   - Easy integration with MATLAB for advanced analytics.
+
+
 
