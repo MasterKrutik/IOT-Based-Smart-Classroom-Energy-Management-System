@@ -24,6 +24,15 @@ This project addresses these issues by automating control systems using sensors 
 - Occupancy count tracking.
 - Remote monitoring via ESP32 (cloud-ready).
 - Low-cost, scalable, and sustainable design.
+- 
+
+ # Software & Libraries
+- Arduino IDE
+- Libraries:
+   - Wire.h
+   - Adafruit_GFX.h
+   - Adafruit_SSD1306.h
+   - DHT.h
 
 
 # Hardware Components and Their Functions 
