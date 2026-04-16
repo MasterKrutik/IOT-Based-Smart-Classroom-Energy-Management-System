@@ -109,6 +109,12 @@ This project uses ThingSpeak, an IoT analytics platform, to enable cloud-based m
    - Used for prototyping and connecting all components without soldering.
 
 
+## Key Takeaways
 
+ - Automation significantly reduces unnecessary energy consumption.
 
+ - Cloud dashboards (ThingSpeak) enhance transparency and remote accessibility.
 
+ - The system can be scaled to real fans, lights, and AC units for practical deployment.
+
+ - Future improvements could include machine learning for predictive energy usage and mobile app notifications for administrators.
