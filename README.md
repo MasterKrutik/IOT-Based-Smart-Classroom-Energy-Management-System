@@ -109,6 +109,52 @@ This project uses ThingSpeak, an IoT analytics platform, to enable cloud-based m
    - Used for prototyping and connecting all components without soldering.
 
 
+##🔍 SWOT Analysis
+### Strengths
+- Automation: Lights and fans controlled automatically based on occupancy and environmental conditions.
+
+- Low Cost: Uses affordable components (Arduino, ESP32, PIR, DHT11, LEDs).
+
+- Cloud Integration: ThingSpeak enables remote monitoring and data visualization.
+
+- Scalability: Can be extended to multiple classrooms or integrated into a smart campus.
+
+- Energy Efficiency: Reduces wastage by ensuring devices are ON only when needed.
+
+### Weaknesses
+- Prototype Limitations: LEDs simulate appliances instead of controlling real fans/lights.
+
+- Sensor Accuracy: DHT11 has limited precision compared to advanced sensors.
+
+- Wi‑Fi Dependence: ESP32 requires stable connectivity; interruptions cause data loss.
+
+- Basic Analytics: ThingSpeak provides visualization but lacks advanced predictive models.
+
+- Limited Coverage: Designed for small/medium classrooms; scaling requires more hardware.
+
+### Opportunities
+- Advanced Sensors: Upgrade to DHT22, CO₂, or light sensors for richer data.
+
+- Machine Learning: Predict occupancy, energy usage, and faults using AI models.
+
+- Mobile App Integration: Push notifications for administrators and teachers.
+
+- Smart Campus Expansion: Centralized dashboard for multiple classrooms.
+
+- Sustainability: Link with solar panels or smart grids for eco‑friendly energy management.
+
+### Threats
+- Connectivity Issues: Poor Wi‑Fi can disrupt cloud logging and monitoring.
+
+- Hardware Failures: Sensor malfunctions may lead to incorrect automation.
+
+- Data Security: Cloud integration requires secure authentication to prevent misuse.
+
+- Adoption Barriers: Schools may hesitate to adopt due to cost or technical expertise.
+
+- Competition: Commercial smart classroom solutions may offer more polished features.
+
+
 ## Key Takeaways
 
  - Automation significantly reduces unnecessary energy consumption.
@@ -118,3 +164,4 @@ This project uses ThingSpeak, an IoT analytics platform, to enable cloud-based m
  - The system can be scaled to real fans, lights, and AC units for practical deployment.
 
  - Future improvements could include machine learning for predictive energy usage and mobile app notifications for administrators.
+   
